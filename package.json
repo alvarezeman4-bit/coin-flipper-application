@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "axe-core": "^4.11.1",
+    "jsdom": "^27.4.0",
+    "node-fetch": "^2.7.0",
+    "puppeteer": "^24.34.0"
+  }
+}
