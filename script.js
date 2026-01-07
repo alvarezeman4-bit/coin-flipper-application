@@ -207,7 +207,7 @@ function playProceduralFlipVariant(variant = 0) {
 }
 
 // Try to load external flip files if present (flip1.mp3, flip2.mp3, flip3.mp3, flip.mp3)
-const externalFlipFiles = ['flip1.mp3','flip2.mp3','flip3.mp3','flip.mp3'];
+const externalFlipFiles = ['flip1.mp3','flip2.mp3','flip3.mp3','flip.mp3','flip1.wav','flip2.wav','flip3.wav'];
 const externalSounds = [];
 externalFlipFiles.forEach(name => {
     const a = new Audio(`assets/sounds/${name}`);
