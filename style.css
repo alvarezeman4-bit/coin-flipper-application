@@ -48,6 +48,29 @@ body {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); border: 0;
 }
 
+/* Theme overrides: Pirate and Minimal */
+.theme-pirate {
+  --bg-1: #f5efe6;
+  --bg-2: #efe3d5;
+  --card-bg: rgba(34,28,22,0.85);
+  --glass: rgba(255,255,255,0.03);
+  --accent: #FFD166;
+  --accent-2: #F76C6C;
+  --text: #2B2B2B;
+  --muted: #7a6f63;
+}
+
+.theme-minimal {
+  --bg-1: #F7FAFC;
+  --bg-2: #EDF2F7;
+  --card-bg: rgba(255,255,255,0.95);
+  --glass: rgba(255,255,255,0.8);
+  --accent: #2563EB;
+  --accent-2: #10B981;
+  --text: #111827;
+  --muted: #6B7280;
+}
+
 /* Controls / ripple */
 button.ripple { position: relative; overflow: hidden; }
 button.ripple:focus { outline: 3px solid rgba(0,123,255,0.12); }

@@ -363,12 +363,29 @@ function spawnFloatingCoin(src) {
     setTimeout(() => coin.remove(), 1700);
 }
 
-themeButton.addEventListener('click', function() {
-    isPirateMode = !isPirateMode;
-    document.body.classList.toggle('pirate');
-    themeButton.textContent = isPirateMode ? 'Switch to Classic Mode' : 'Switch to Pirate Mode';
-    // Update coin image immediately
+// Theme switcher (cycle between neon, pirate, minimal)
+const themes = ['neon','pirate','minimal'];
+const themeNames = { neon: 'Night Neon', pirate: 'Warm Pirate', minimal: 'Minimal Calm' };
+function applyTheme(theme) {
+    themes.forEach(t => document.body.classList.remove(`theme-${t}`));
+    document.body.classList.add(`theme-${theme}`);
+    localStorage.setItem('theme', theme);
+    // Update label
+    themeButton.textContent = `Theme: ${themeNames[theme]}`;
+    // Pirate mode affects coin imagery
+    isPirateMode = (theme === 'pirate');
+    // Update coin image to match theme immediately
     coinImage.src = isPirateMode ? (lastResult === 'Heads' ? pirateHeadsImg : pirateTailsImg) : (lastResult === 'Heads' ? headsImg : tailsImg);
+}
+
+// Initialize theme from storage
+const storedTheme = localStorage.getItem('theme') || 'neon';
+applyTheme(storedTheme);
+
+themeButton.addEventListener('click', function() {
+    const idx = themes.indexOf(localStorage.getItem('theme') || 'neon');
+    const next = themes[(idx + 1) % themes.length];
+    applyTheme(next);
 });
 
 // Image load error fallback
