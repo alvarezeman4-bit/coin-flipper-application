@@ -146,11 +146,104 @@ volumeSlider.addEventListener('input', (e) => {
     updateVolumeUI();
 });
 
-// Keyboard shortcuts: Space to flip, M to mute
+// Keyboard shortcuts: Space to flip, M to mute, Enter to flip
 window.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') { e.preventDefault(); flipButton.click(); }
+    if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); flipButton.click(); }
     if (e.key === 'm' || e.key === 'M') { muteButton.click(); }
 });
+
+// --- Shake-to-flip support ---
+const shakeButton = document.getElementById('shake-button');
+let shakeEnabled = localStorage.getItem('shakeEnabled') === 'true';
+let shakeCooldown = false;
+
+function updateShakeUI() {
+    if (!shakeButton) return;
+    shakeButton.setAttribute('aria-pressed', String(shakeEnabled));
+}
+updateShakeUI();
+
+async function enableShake() {
+    // On iOS 13+ we may need to request permission
+    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+        try {
+            const res = await DeviceMotionEvent.requestPermission();
+            if (res !== 'granted') { showToast('Permission denied for motion sensors'); shakeEnabled = false; updateShakeUI(); return; }
+        } catch (e) {
+            showToast('Motion permission request failed');
+            shakeEnabled = false; updateShakeUI();
+            return;
+        }
+    }
+
+    if (!window._shakeListener) {
+        let lastX = null, lastY = null, lastZ = null, lastTime = 0, shakeCount = 0;
+        const threshold = 25; // tuned
+        window._shakeListener = function(ev) {
+            if (!shakeEnabled || shakeCooldown) return;
+            const acc = ev.accelerationIncludingGravity || ev.acceleration || { x:0, y:0, z:0 };
+            const x = acc.x || 0, y = acc.y || 0, z = acc.z || 0;
+            if (lastX === null) { lastX = x; lastY = y; lastZ = z; lastTime = Date.now(); return; }
+            const delta = Math.abs(x - lastX) + Math.abs(y - lastY) + Math.abs(z - lastZ);
+            const now = Date.now();
+            if (delta > threshold) {
+                if (now - lastTime < 1000) {
+                    shakeCount++;
+                } else {
+                    shakeCount = 1;
+                }
+                if (shakeCount >= 2) {
+                    // trigger flip
+                    shakeCooldown = true;
+                    flipButton.click();
+                    // vibration feedback
+                    if (navigator.vibrate) navigator.vibrate(40);
+                    setTimeout(() => { shakeCooldown = false; }, 1200);
+                    shakeCount = 0;
+                }
+                lastTime = now;
+            }
+            lastX = x; lastY = y; lastZ = z;
+        };
+        window.addEventListener('devicemotion', window._shakeListener);
+    }
+}
+
+function disableShake() {
+    if (window._shakeListener) {
+        window.removeEventListener('devicemotion', window._shakeListener);
+        window._shakeListener = null;
+    }
+}
+
+shakeButton && shakeButton.addEventListener('click', async () => {
+    shakeEnabled = !shakeEnabled;
+    localStorage.setItem('shakeEnabled', String(shakeEnabled));
+    updateShakeUI();
+    if (shakeEnabled) {
+        await enableShake();
+        showToast('Shake to flip enabled');
+    } else {
+        disableShake();
+        showToast('Shake to flip disabled');
+    }
+});
+
+// If previously enabled, try to enable on load
+if (shakeEnabled) {
+    enableShake();
+}
+
+// Simple toast helper
+function showToast(msg, timeout = 1600) {
+    let t = document.querySelector('.toast');
+    if (!t) {
+        t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t);
+    }
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._dismiss);
+    t._dismiss = setTimeout(() => t.classList.remove('show'), timeout);
+}
 
 // WebAudio procedural flip sound (synthesized short noise burst)
 function ensureAudioContext() {
