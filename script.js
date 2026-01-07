@@ -91,6 +91,9 @@ flipButton.addEventListener('click', function(e) {
         // Spawn floating coin accent
         spawnFloatingCoin(result === 'Heads' ? 'assets/images/heads.png' : 'assets/images/tails.png');
 
+        // Auto-save to local leaderboard if this is a top streak
+        checkAndMaybeSave(currentStreak);
+
         // Confetti on 3-streak or 5-streak (progressive)
         if (currentStreak >= 5) {
             confetti({ particleCount: 140, spread: 80, origin: { y: 0.6 } });
@@ -362,6 +365,58 @@ function spawnFloatingCoin(src) {
     document.body.appendChild(coin);
     setTimeout(() => coin.remove(), 1700);
 }
+
+// ----------------- Leaderboard (localStorage) -----------------
+const LEADERBOARD_KEY = 'coinLeaderboard';
+
+function loadLeaderboard() {
+    try { return JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function saveLeaderboard(list) {
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(list));
+    renderLeaderboard();
+}
+
+function renderLeaderboard() {
+    const container = document.getElementById('leaderboard-list');
+    if (!container) return;
+    const list = loadLeaderboard();
+    container.innerHTML = '';
+    if (!list.length) { container.innerHTML = '<li class="muted">No scores yet</li>'; return; }
+    list.forEach(entry => {
+        const li = document.createElement('li');
+        const name = document.createElement('span'); name.className = 'leaderboard-name'; name.textContent = entry.name;
+        const score = document.createElement('span'); score.className = 'leaderboard-score'; score.textContent = entry.score;
+        li.appendChild(name); li.appendChild(score);
+        container.appendChild(li);
+    });
+}
+
+function saveScoreToLeaderboard(name, score) {
+    const list = loadLeaderboard();
+    const entry = { name: name || 'Player', score: score, date: new Date().toISOString() };
+    list.push(entry);
+    list.sort((a,b) => b.score - a.score || new Date(a.date) - new Date(b.date));
+    const top = list.slice(0,5);
+    saveLeaderboard(top);
+    showToast('Score saved to leaderboard');
+}
+
+function checkAndMaybeSave(score) {
+    if (!score || score <= 0) return;
+    const list = loadLeaderboard();
+    if (list.length < 5 || score > list[list.length - 1].score) {
+        const defaultName = 'You';
+        const name = prompt('New high streak! Enter your name:', defaultName);
+        if (name !== null) {
+            saveScoreToLeaderboard(name.trim() || defaultName, score);
+        }
+    }
+}
+
+// render leaderboard on load
+renderLeaderboard();
 
 // Theme switcher (cycle between neon, pirate, minimal)
 const themes = ['neon','pirate','minimal'];

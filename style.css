@@ -41,6 +41,14 @@ body {
 .stat-value { font-size:20px; font-weight:700; color: var(--accent); }
 .stat-label { font-size:12px; color:var(--muted); }
 
+/* Leaderboard styles */
+.leaderboard { margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.02); border-radius:10px; border: 1px solid rgba(124,58,237,0.06); }
+.leaderboard h3 { margin: 0 0 8px 0; font-size:14px; color: var(--muted); }
+.leaderboard-list { list-style: decimal; padding-left: 18px; margin:0; color: var(--text); }
+.leaderboard-list li { padding: 6px 0; display:flex; justify-content:space-between; align-items:center; }
+.leaderboard-name { color: var(--muted); margin-right: 12px; }
+.leaderboard-score { font-weight:700; color: var(--accent); }
+
 .footer { text-align:center; color:var(--muted); margin-top:14px; }
 
 /* Screen-reader only helper */
