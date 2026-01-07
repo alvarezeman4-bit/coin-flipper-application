@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 300 300">
+  <rect width="100%" height="100%" fill="#FFD700" rx="30"/>
+  <circle cx="150" cy="110" r="60" fill="#FFF" stroke="#D4A300" stroke-width="8"/>
+  <text x="150" y="190" font-size="48" font-family="Arial" fill="#663300" text-anchor="middle">HEADS@2x</text>
+</svg>

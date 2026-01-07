@@ -12,11 +12,11 @@ const themeButton = document.getElementById('theme-button');
 const flipSound = document.getElementById('flip-sound');
 
 // Image paths (put your images in assets/images/)
-const headsImg = 'assets/images/coin-heads.png';
-const headsImg2x = 'assets/images/coin-heads@2x.png';
-const tailsImg = 'assets/images/coin-tails.png';
-const pirateHeadsImg = 'assets/images/pirate-heads.png';
-const pirateTailsImg = 'assets/images/pirate-tails.png';
+const headsImg = 'assets/images/coin-heads.svg';
+const headsImg2x = 'assets/images/coin-heads@2x.svg';
+const tailsImg = 'assets/images/coin-tails.svg';
+const pirateHeadsImg = 'assets/images/pirate-heads.svg';
+const pirateTailsImg = 'assets/images/pirate-tails.svg';
 
 // Preload images to avoid flicker
 [headsImg, headsImg2x, tailsImg, pirateHeadsImg, pirateTailsImg].forEach(src => {
