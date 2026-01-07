@@ -79,14 +79,17 @@ flipButton.addEventListener('click', function(e) {
         }
         lastResult = result;
 
-        // Update display
-        document.getElementById('total-flips').textContent = totalFlips;
-        document.getElementById('heads-count').textContent = headsCount;
-        document.getElementById('tails-count').textContent = tailsCount;
-        document.getElementById('streak').textContent = currentStreak;
+        // Update display with animated numbers
+        animateNumber(document.getElementById('total-flips'), totalFlips);
+        animateNumber(document.getElementById('heads-count'), headsCount);
+        animateNumber(document.getElementById('tails-count'), tailsCount);
+        animateNumber(document.getElementById('streak'), currentStreak);
 
         // Announce for screen readers
         if (sr) sr.textContent = `Flip result: ${result}`;
+
+        // Spawn floating coin accent
+        spawnFloatingCoin(result === 'Heads' ? 'assets/images/heads.png' : 'assets/images/tails.png');
 
         // Confetti on 3-streak or 5-streak (progressive)
         if (currentStreak >= 5) {
@@ -240,6 +243,32 @@ function playRandomFlip() {
 document.getElementById('play-sound-button').addEventListener('click', () => {
     if (!isMuted) playRandomFlip();
 });
+
+// Animated number helper
+function animateNumber(el, to) {
+    if (!el) return;
+    const start = Number(el.textContent) || 0;
+    const duration = 600;
+    const startTime = performance.now();
+    function step(now) {
+        const t = Math.min(1, (now - startTime) / duration);
+        const val = Math.floor(start + (to - start) * t);
+        el.textContent = val;
+        if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
+// Floating coin accent
+function spawnFloatingCoin(src) {
+    const coin = document.createElement('img');
+    coin.src = src;
+    coin.className = 'floating-coin';
+    coin.style.left = (window.innerWidth/2 + (Math.random()*160 - 80)) + 'px';
+    coin.style.top = (window.innerHeight/2 + 40 + (Math.random()*40 - 20)) + 'px';
+    document.body.appendChild(coin);
+    setTimeout(() => coin.remove(), 1700);
+}
 
 themeButton.addEventListener('click', function() {
     isPirateMode = !isPirateMode;

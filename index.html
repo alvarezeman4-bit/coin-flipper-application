@@ -4,35 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coin Flipper</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Coin Flipper</h1>
-        <div class="theme-toggle">
-            <button id="theme-button">Switch to Pirate Mode</button>
-        </div>
-        <div class="coin" id="coin" role="region" aria-label="Coin">
-            <div class="coin-wrap" id="coin-wrap">
-                <img id="coin-image" src="assets/images/heads.png" srcset="assets/images/heads@2x.png 2x" alt="Coin" loading="lazy">
-                <div class="coin-shadow" id="coin-shadow" aria-hidden="true"></div>
+        <header class="header">
+            <div>
+                <h1>Coin Flipper</h1>
+                <p class="subtitle">A stylish coin toss — quick, fun, and a bit dramatic</p>
             </div>
-        </div>
-        <div class="controls">
-            <button id="flip-button" class="ripple">Flip Coin</button>
-            <div class="sound-controls">
-                <button id="mute-button" class="ripple" aria-pressed="false" title="Mute (M)">🔊</button>
-                <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+            <div class="header-actions">
+                <button id="theme-button" class="ripple">Switch Mode</button>
             </div>
-            <button id="play-sound-button" class="ripple">Play Sound</button>
-        </div>
-        <p id="result"></p>
-        <div class="stats">
-            <p>Total Flips: <span id="total-flips">0</span></p>
-            <p>Heads: <span id="heads-count">0</span> | Tails: <span id="tails-count">0</span></p>
-            <p>Current Streak: <span id="streak">0</span></p>
-        </div>
+        </header>
+
+        <main class="main-card">
+            <section class="left-panel">
+                <div class="coin" id="coin" role="region" aria-label="Coin">
+                    <div class="coin-wrap" id="coin-wrap">
+                        <img id="coin-image" src="assets/images/heads.png" alt="Coin" loading="lazy">
+                        <div class="coin-shadow" id="coin-shadow" aria-hidden="true"></div>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button id="flip-button" class="ripple">Flip Coin</button>
+                    <div class="sound-controls">
+                        <button id="mute-button" class="ripple" aria-pressed="false" title="Mute (M)">🔊</button>
+                        <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+                    </div>
+                    <button id="play-sound-button" class="ripple">Play Sound</button>
+                </div>
+                <p id="result" class="result-text"></p>
+            </section>
+
+            <aside class="right-panel">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-flips">0</div>
+                        <div class="stat-label">Total Flips</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="heads-count">0</div>
+                        <div class="stat-label">Heads</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="tails-count">0</div>
+                        <div class="stat-label">Tails</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="streak">0</div>
+                        <div class="stat-label">Current Streak</div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <footer class="footer">Made with ❤️ — Good luck!</footer>
     </div>
+
     <audio id="flip-sound" src="assets/sounds/flip.mp3" preload="auto"></audio> <!-- Use uploaded file: assets/sounds/flip.mp3 -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>

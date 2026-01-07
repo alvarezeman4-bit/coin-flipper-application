@@ -1,14 +1,78 @@
+:root {
+  --bg-1: #f5f7fa;
+  --bg-2: #c3cfe2;
+  --card-bg: rgba(255,255,255,0.8);
+  --glass: rgba(255,255,255,0.6);
+  --accent: #FFD166;
+  --accent-2: #06D6A0;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --glass-blur: 8px;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
     background-size: 400% 400%;
     animation: gradientShift 12s ease infinite;
-    transition: background-color 0.5s;
+    color: var(--text);
+    display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0;
+}
+
+.header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.header h1 { font-size:28px; margin:0; font-weight:700; letter-spacing:-0.4px; }
+.subtitle { color:var(--muted); margin-top:6px; font-weight:500; }
+
+.main-card { background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.65)); backdrop-filter: blur(var(--glass-blur)); border-radius:16px; padding:20px; display:grid; grid-template-columns: 1fr 280px; gap:20px; align-items:center; box-shadow: 0 10px 30px rgba(12,24,40,0.08); }
+
+.left-panel { text-align:center; }
+.right-panel { }
+
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.stat-card { background:rgba(255,255,255,0.6); padding:12px; border-radius:10px; text-align:center; }
+.stat-value { font-size:20px; font-weight:700; }
+.stat-label { font-size:12px; color:var(--muted); }
+
+.footer { text-align:center; color:var(--muted); margin-top:14px; }
+
+/* Screen-reader only helper */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); border: 0;
+}
+
+/* Controls / ripple */
+button.ripple { position: relative; overflow: hidden; }
+button.ripple:focus { outline: 3px solid rgba(0,123,255,0.12); }
+.ripple-el { position: absolute; border-radius: 50%; transform: scale(0); background: rgba(255,255,255,0.6); animation: ripple 600ms linear; pointer-events:none; }
+@keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+/* Coin 3D and shadow */
+.coin { margin: 20px 0; perspective: 1200px; }
+.coin-wrap { display:inline-block; position:relative; width:210px; height:210px; border-radius:50%; transform-style: preserve-3d; transition: transform 0.9s cubic-bezier(.2,.8,.3,1); }
+.coin img { width: 210px; height: 210px; max-width:100%; border-radius:50%; display:block; backface-visibility: hidden; object-fit: cover; }
+.coin-shadow { position:absolute; left:50%; bottom:-18px; transform:translateX(-50%); width: 60%; height: 26px; background: radial-gradient(ellipse at center, rgba(0,0,0,0.35), rgba(0,0,0,0)); border-radius:50%; transition: transform 0.9s, opacity 0.9s; opacity:0.8; }
+.animate-flip { transform: rotateY(1080deg) translateY(-14px); filter: drop-shadow(0 24px 40px rgba(0,0,0,0.22)); }
+.shadow-animate { transform: scale(1.25); opacity: 0.6; }
+
+/* Button micro-interactions */
+button { padding: 10px 18px; font-size: 15px; cursor: pointer; background-color: var(--accent-2); color: white; border: none; border-radius: 10px; margin: 5px; transition: transform .12s ease, box-shadow .12s ease; }
+button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.12); }
+button:active { transform: translateY(-1px) scale(.995); }
+
+/* Sound controls */
+.sound-controls { display:inline-flex; align-items:center; gap:8px; margin:0 8px; }
+#volume-slider { width:120px; }
+#mute-button { padding: 8px 10px; font-size: 18px; }
+#mute-button[aria-pressed="true"] { background: #ccc; color: #333; }
+
+/* Floating coin accent */
+.floating-coin { position:fixed; width:44px; height:44px; pointer-events:none; animation: floatUp 1.6s ease-out forwards; transform-origin:center; z-index:1000; }
+@keyframes floatUp { 0%{ opacity:1; transform: translateY(0) scale(1);} 100%{ opacity:0; transform: translateY(-160px) scale(0.6) rotate(360deg);} }
+
+@media (max-width: 800px) {
+  .main-card { grid-template-columns: 1fr; }
+  .coin-wrap { width: 170px; height:170px; }
+  .coin img { width:170px; height:170px; }
 }
 @keyframes gradientShift {
   0%{ background-position:0% 50%; }
