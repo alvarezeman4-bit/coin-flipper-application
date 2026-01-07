@@ -1,0 +1,45 @@
+name: a11y-and-lighthouse
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies for axe
+        run: npm install --no-audit --no-fund puppeteer axe-core jsdom node-fetch@2
+
+      - name: Start static server
+        run: npx http-server -p 8080 & sleep 2
+
+      - name: Run axe (puppeteer)
+        run: node tools/run-axe.js
+        continue-on-error: true
+
+      - name: Run axe (jsdom)
+        run: node tools/run-axe-jsdom.js
+
+      - name: Run Lighthouse
+        run: |
+          npx -y lighthouse http://127.0.0.1:8080 --quiet --chrome-flags='--headless --no-sandbox' --output=json --output-path=./lighthouse-report.json || true
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-and-lighthouse-reports
+          path: |
+            ./axe-results.json
+            ./axe-results-jsdom.json
+            ./lighthouse-report.json
+            ./lighthouse-report.html
