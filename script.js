@@ -422,12 +422,89 @@ function checkAndMaybeSave(score) {
     if (!score || score <= 0) return;
     const list = loadLeaderboard();
     if (list.length < 5 || score > list[list.length - 1].score) {
-        const defaultName = 'You';
-        const name = prompt('New high streak! Enter your name:', defaultName);
-        if (name !== null) {
-            saveScoreToLeaderboard(name.trim() || defaultName, score);
-        }
+        // Open accessible modal to request name instead of blocking prompt
+        openScoreModal(score, 'You');
     }
+}
+
+// Accessible modal helpers for high-score name entry
+const scoreModal = document.getElementById('score-modal');
+const scoreInput = document.getElementById('score-name');
+const scoreSave = document.getElementById('score-save');
+const scoreCancel = document.getElementById('score-cancel');
+const scoreModalScore = document.getElementById('score-modal-score');
+let _lastFocused = null;
+let _focusTrap = null;
+
+function openScoreModal(score, defaultName = 'You') {
+    if (!scoreModal) return;
+    _lastFocused = document.activeElement;
+    scoreModalScore.textContent = String(score);
+    scoreInput.value = defaultName;
+    scoreModal.hidden = false;
+    scoreModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    setTimeout(() => scoreInput.focus(), 10);
+    trapFocus(scoreModal);
+}
+
+function closeScoreModal() {
+    if (!scoreModal) return;
+    scoreModal.hidden = true;
+    scoreModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    releaseFocusTrap();
+    if (_lastFocused && typeof _lastFocused.focus === 'function') _lastFocused.focus();
+}
+
+scoreSave && scoreSave.addEventListener('click', () => {
+    const name = (scoreInput.value || 'You').trim() || 'You';
+    const score = Number(scoreModalScore.textContent) || 0;
+    saveScoreToLeaderboard(name, score);
+    closeScoreModal();
+});
+
+scoreCancel && scoreCancel.addEventListener('click', () => {
+    closeScoreModal();
+});
+
+// Close when clicking the overlay
+scoreModal && scoreModal.addEventListener('click', (e) => {
+    if (e.target && e.target.matches('[data-modal-close]')) closeScoreModal();
+});
+
+// Close on Escape
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && scoreModal && !scoreModal.hidden) {
+        closeScoreModal();
+    }
+});
+
+// Focus trap helpers (simple implementation)
+function trapFocus(modal) {
+    const focusable = modal.querySelectorAll('a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])');
+    const nodes = Array.prototype.slice.call(focusable);
+    if (!nodes.length) return;
+    let first = nodes[0];
+    let last = nodes[nodes.length - 1];
+    _focusTrap = function(e) {
+        if (e.key !== 'Tab') return;
+        if (e.shiftKey) {
+            if (document.activeElement === first) {
+                e.preventDefault(); last.focus();
+            }
+        } else {
+            if (document.activeElement === last) {
+                e.preventDefault(); first.focus();
+            }
+        }
+    };
+    document.addEventListener('keydown', _focusTrap);
+}
+
+function releaseFocusTrap() {
+    if (_focusTrap) document.removeEventListener('keydown', _focusTrap);
+    _focusTrap = null;
 }
 
 // render leaderboard on load

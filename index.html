@@ -75,6 +75,22 @@
     </div>
 
     <audio id="flip-sound" src="assets/sounds/flip.mp3" preload="auto"></audio> <!-- Use uploaded file: assets/sounds/flip.mp3 -->
+
+    <!-- Accessible modal for entering high-score name -->
+    <div id="score-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="score-modal-title" aria-hidden="true" hidden>
+      <div class="modal-overlay" data-modal-close tabindex="-1"></div>
+      <div class="modal-content" role="document">
+        <h2 id="score-modal-title">New High Streak!</h2>
+        <p id="score-modal-body">You achieved a streak of <strong id="score-modal-score">0</strong>. Enter your name:</p>
+        <label for="score-name" class="sr-only">Name</label>
+        <input id="score-name" class="modal-input" type="text" maxlength="20" value="You" aria-label="Your name" />
+        <div class="modal-actions">
+          <button id="score-save" type="button" class="ripple">Save</button>
+          <button id="score-cancel" type="button" class="ripple">Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
 </body>
