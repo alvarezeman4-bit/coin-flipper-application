@@ -31,8 +31,10 @@ body.pirate .container {
 .coin img {
     width: 150px;
     height: 150px;
+    max-width: 100%;
     border-radius: 50%;
     transition: transform 0.5s;
+    object-fit: cover;
 }
 .flip-animation {
     animation: spin 0.5s ease-in-out;
@@ -73,4 +75,8 @@ body.pirate button {
 @media (max-width: 600px) {
     .coin img { width: 120px; height: 120px; }
     button { font-size: 14px; }
+}
+.header {
+  background-image: url('assets/images/bg.jpg');
+  background-size: cover;
 }

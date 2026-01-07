@@ -11,15 +11,25 @@ const resultDisplay = document.getElementById('result');
 const themeButton = document.getElementById('theme-button');
 const flipSound = document.getElementById('flip-sound');
 
-// Default images (replace with your own hosted images for better control)
-const headsImg = 'https://via.placeholder.com/150/FFD700/000000?text=Heads';
-const tailsImg = 'https://via.placeholder.com/150/C0C0C0/000000?text=Tails';
-const pirateHeadsImg = 'https://via.placeholder.com/150/FFD700/000000?text=Pirate+Heads'; // Creative: Skull or treasure
-const pirateTailsImg = 'https://via.placeholder.com/150/C0C0C0/000000?text=Pirate+Tails';
+// Image paths (put your images in assets/images/)
+const headsImg = 'assets/images/coin-heads.png';
+const headsImg2x = 'assets/images/coin-heads@2x.png';
+const tailsImg = 'assets/images/coin-tails.png';
+const pirateHeadsImg = 'assets/images/pirate-heads.png';
+const pirateTailsImg = 'assets/images/pirate-tails.png';
+
+// Preload images to avoid flicker
+[headsImg, headsImg2x, tailsImg, pirateHeadsImg, pirateTailsImg].forEach(src => {
+    const img = new Image();
+    img.src = src;
+});
 
 flipButton.addEventListener('click', function() {
-    // Play sound
-    flipSound.play();
+    // Play sound (reset to start and handle blocked play)
+    if (flipSound) {
+        flipSound.currentTime = 0;
+        flipSound.play().catch(err => console.log('Audio play prevented or failed', err));
+    }
 
     // Add spin animation
     coinImage.classList.add('flip-animation');
@@ -65,4 +75,10 @@ themeButton.addEventListener('click', function() {
     themeButton.textContent = isPirateMode ? 'Switch to Classic Mode' : 'Switch to Pirate Mode';
     // Update coin image immediately
     coinImage.src = isPirateMode ? (lastResult === 'Heads' ? pirateHeadsImg : pirateTailsImg) : (lastResult === 'Heads' ? headsImg : tailsImg);
+});
+
+// Image load error fallback
+coinImage.addEventListener('error', () => {
+    console.warn('Coin image failed to load; using placeholder.');
+    coinImage.src = 'https://via.placeholder.com/150/FFD700/000000?text=Coin';
 });
