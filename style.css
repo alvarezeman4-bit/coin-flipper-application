@@ -1,0 +1,76 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    transition: background-color 0.5s;
+}
+body.pirate {
+    background-color: #2E1B0F; /* Dark pirate theme */
+    color: #FFD700;
+}
+.container {
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: background 0.5s;
+    max-width: 400px;
+    width: 90%;
+}
+body.pirate .container {
+    background: #8B4513; /* Pirate wood-like color */
+}
+.coin {
+    margin: 20px 0;
+}
+.coin img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    transition: transform 0.5s;
+}
+.flip-animation {
+    animation: spin 0.5s ease-in-out;
+}
+@keyframes spin {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(720deg); } /* Two full spins */
+}
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 5px;
+}
+button:hover {
+    background-color: #45a049;
+}
+body.pirate button {
+    background-color: #FFD700;
+    color: #2E1B0F;
+}
+#result {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+.stats {
+    margin-top: 20px;
+    font-size: 18px;
+}
+.theme-toggle {
+    margin-bottom: 20px;
+}
+@media (max-width: 600px) {
+    .coin img { width: 120px; height: 120px; }
+    button { font-size: 14px; }
+}
