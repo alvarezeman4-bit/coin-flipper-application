@@ -20,7 +20,7 @@ if (muteStored) isMuted = true;
 
 // Image paths (put your images in assets/images/)
 const headsImg = 'assets/images/heads.png';
-const headsImg2x = 'assets/images/heads@2x.png';
+const headsImg2x = 'assets/images/heads@2x.svg';
 const tailsImg = 'assets/images/tails.png';
 const pirateHeadsImg = 'assets/images/pirate-heads.svg';
 const pirateTailsImg = 'assets/images/pirate-tails.svg';
@@ -309,8 +309,8 @@ function playProceduralFlipVariant(variant = 0) {
     osc.stop(now + 0.03);
 }
 
-// Try to load external flip files if present (flip1.mp3, flip2.mp3, flip3.mp3, flip.mp3)
-const externalFlipFiles = ['flip1.mp3','flip2.mp3','flip3.mp3','flip.mp3','flip1.wav','flip2.wav','flip3.wav'];
+// Try to load external flip files if present
+const externalFlipFiles = ['flip1.wav','flip2.wav','flip3.wav','flip.wav','flip.mp3'];
 const externalSounds = [];
 externalFlipFiles.forEach(name => {
     const a = new Audio(`assets/sounds/${name}`);
