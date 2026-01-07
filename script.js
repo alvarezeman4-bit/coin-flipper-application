@@ -24,23 +24,29 @@ const pirateTailsImg = 'assets/images/pirate-tails.svg';
     img.src = src;
 });
 
-flipButton.addEventListener('click', function() {
+const coinWrap = document.getElementById('coin-wrap');
+const coinShadow = document.getElementById('coin-shadow');
+const sr = document.createElement('div'); sr.id = 'sr'; sr.className = 'sr-only'; sr.setAttribute('aria-live','polite'); document.body.appendChild(sr);
+
+flipButton.addEventListener('click', function(e) {
     // Play sound (reset to start and handle blocked play)
     if (flipSound) {
         flipSound.currentTime = 0;
         flipSound.play().catch(err => console.log('Audio play prevented or failed', err));
     }
 
-    // Add spin animation
-    coinImage.classList.add('flip-animation');
-    setTimeout(() => coinImage.classList.remove('flip-animation'), 500);
+    // Start polished animation
+    if (coinWrap && coinShadow) {
+        coinWrap.classList.add('animate-flip');
+        coinShadow.classList.add('shadow-animate');
+    }
 
-    // Generate result after animation
+    // Mid-animation result swap
     setTimeout(() => {
         const result = Math.random() < 0.5 ? 'Heads' : 'Tails';
         resultDisplay.textContent = result;
 
-        // Update image
+        // Update image (swap mid-flip)
         coinImage.src = isPirateMode ? (result === 'Heads' ? pirateHeadsImg : pirateTailsImg) : (result === 'Heads' ? headsImg : tailsImg);
 
         // Update stats
@@ -62,11 +68,37 @@ flipButton.addEventListener('click', function() {
         document.getElementById('tails-count').textContent = tailsCount;
         document.getElementById('streak').textContent = currentStreak;
 
-        // Confetti on 5-streak
+        // Announce for screen readers
+        if (sr) sr.textContent = `Flip result: ${result}`;
+
+        // Confetti on 3-streak or 5-streak (progressive)
         if (currentStreak >= 5) {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            confetti({ particleCount: 140, spread: 80, origin: { y: 0.6 } });
+        } else if (currentStreak >= 3) {
+            confetti({ particleCount: 60, spread: 60, origin: { y: 0.6 } });
         }
-    }, 250); // Delay to sync with animation
+    }, 450); // mid-point of the animation
+
+    // Cleanup animation classes after full animation
+    setTimeout(() => {
+        if (coinWrap && coinShadow) {
+            coinWrap.classList.remove('animate-flip');
+            coinShadow.classList.remove('shadow-animate');
+        }
+    }, 1100);
+});
+
+// Button ripple effect
+document.querySelectorAll('button.ripple').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        const rect = btn.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple-el';
+        ripple.style.left = (e.clientX - rect.left) + 'px';
+        ripple.style.top = (e.clientY - rect.top) + 'px';
+        btn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 650);
+    });
 });
 
 themeButton.addEventListener('click', function() {
