@@ -39,6 +39,7 @@
                     </div>
                     <button id="play-sound-button" type="button" class="ripple" aria-label="Play flip sound">Play Sound</button>
                 </div>
+                <audio id="flip-sound" src="assets/sounds/flip.mp3" preload="auto" aria-hidden="true"></audio>
                 <p id="result" class="result-text" role="status" aria-live="assertive"></p>
             </section>
 
@@ -63,7 +64,7 @@
                 </div>
 
                 <div class="leaderboard">
-                    <h3>Leaderboard</h3>
+                    <h2>Leaderboard</h2>
                     <ol id="leaderboard-list" class="leaderboard-list" role="list" aria-live="polite" aria-label="Top scores">
                         <!-- top scores rendered here -->
                     </ol>
