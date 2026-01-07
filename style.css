@@ -40,6 +40,13 @@ button { padding: 10px 20px; font-size: 16px; cursor: pointer; background-color:
 button:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
 button:active { transform: translateY(-1px) scale(.995); }
 
+/* Sound controls */
+.sound-controls { display:inline-flex; align-items:center; gap:8px; margin:0 8px; }
+#volume-slider { width:120px; }
+#mute-button { padding: 8px 10px; font-size: 18px; }
+#mute-button[aria-pressed="true"] { background: #ccc; color: #333; }
+
+
 body.pirate {
     background-color: #2E1B0F; /* Dark pirate theme */
     color: #FFD700;

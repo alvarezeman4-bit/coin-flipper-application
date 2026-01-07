@@ -20,6 +20,10 @@
         </div>
         <div class="controls">
             <button id="flip-button" class="ripple">Flip Coin</button>
+            <div class="sound-controls">
+                <button id="mute-button" class="ripple" aria-pressed="false" title="Mute (M)">🔊</button>
+                <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+            </div>
             <button id="play-sound-button" class="ripple">Play Sound</button>
         </div>
         <p id="result"></p>
