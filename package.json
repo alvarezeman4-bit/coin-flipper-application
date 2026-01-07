@@ -1,8 +1,20 @@
 {
+  "name": "coin-flipper-application",
+  "version": "1.0.0",
+  "description": "A small accessible coin flip web app",
+  "scripts": {
+    "start": "npx http-server -p 8080",
+    "smoke": "node tools/smoke-test.js",
+    "a11y:jsdom": "node tools/run-axe-jsdom.js",
+    "a11y": "node tools/run-axe.js",
+    "lighthouse": "npx -y lighthouse http://127.0.0.1:8080 --quiet --chrome-flags='--headless --no-sandbox' --output=json --output-path=./lighthouse-report.json",
+    "test": "npm run a11y:jsdom"
+  },
   "dependencies": {
     "axe-core": "^4.11.1",
     "jsdom": "^27.4.0",
     "node-fetch": "^2.7.0",
     "puppeteer": "^24.34.0"
-  }
+  },
+  "license": "MIT"
 }
