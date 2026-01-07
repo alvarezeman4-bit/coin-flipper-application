@@ -18,11 +18,8 @@ const pirateHeadsImg = 'https://via.placeholder.com/150/FFD700/000000?text=Pirat
 const pirateTailsImg = 'https://via.placeholder.com/150/C0C0C0/000000?text=Pirate+Tails';
 
 flipButton.addEventListener('click', function() {
-    // Play sound (reset to start and handle blocked play)
-    if (flipSound) {
-        flipSound.currentTime = 0;
-        flipSound.play().catch(err => console.log('Audio play prevented or failed', err));
-    }
+    // Play sound
+    flipSound.play();
 
     // Add spin animation
     coinImage.classList.add('flip-animation');
@@ -69,14 +66,3 @@ themeButton.addEventListener('click', function() {
     // Update coin image immediately
     coinImage.src = isPirateMode ? (lastResult === 'Heads' ? pirateHeadsImg : pirateTailsImg) : (lastResult === 'Heads' ? headsImg : tailsImg);
 });
-
-// Play sound test button
-const playSoundButton = document.getElementById('play-sound-button');
-if (playSoundButton) {
-    playSoundButton.addEventListener('click', function() {
-        if (flipSound) {
-            flipSound.currentTime = 0;
-            flipSound.play().catch(err => console.log('Audio play prevented or failed', err));
-        }
-    });
-}
