@@ -154,36 +154,86 @@ function ensureAudioContext() {
     if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
 }
 
-function playProceduralFlip() {
+// Create different procedural variants for variety
+function playProceduralFlipVariant(variant = 0) {
     ensureAudioContext();
     const ctx = audioContext;
     const now = ctx.currentTime;
-    const bufferSize = ctx.sampleRate * 0.15; // 150ms noise
+
+    // Parameters by variant
+    const configs = [
+        { dur: 0.12, hf: 1200, gain: 0.45 },
+        { dur: 0.18, hf: 800, gain: 0.55 },
+        { dur: 0.09, hf: 1600, gain: 0.35 },
+    ];
+    const cfg = configs[variant % configs.length];
+
+    // white-noise buffer with quick decay
+    const bufferSize = Math.floor(ctx.sampleRate * cfg.dur);
     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
-        data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize) * 0.5; // decaying white noise
+        data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize) * 0.6;
     }
+
     const src = ctx.createBufferSource();
     src.buffer = buffer;
+
     const gain = ctx.createGain();
-    gain.gain.value = volume;
-    const hf = ctx.createBiquadFilter(); hf.type = 'highpass'; hf.frequency.value = 900 + Math.random() * 1200;
+    gain.gain.setValueAtTime(cfg.gain * volume, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + cfg.dur);
+
+    const hf = ctx.createBiquadFilter(); hf.type = 'highpass'; hf.frequency.value = cfg.hf + Math.random() * 400;
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 8000;
+
+    // small click transient using oscillator (adds 'edge' like a coin flick)
+    const osc = ctx.createOscillator();
+    const clickGain = ctx.createGain();
+    osc.frequency.value = 1500 + Math.random() * 600;
+    clickGain.gain.setValueAtTime(0.0001, now);
+    clickGain.gain.exponentialRampToValueAtTime(0.25 * volume, now + 0.002);
+    clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.02);
+    osc.connect(clickGain);
+
     src.connect(hf);
-    hf.connect(gain);
+    hf.connect(lp);
+    lp.connect(gain);
     gain.connect(ctx.destination);
+    clickGain.connect(ctx.destination);
+
     src.start(now);
+    osc.start(now);
+    osc.stop(now + 0.03);
 }
 
+// Try to load external flip files if present (flip1.mp3, flip2.mp3, flip3.mp3, flip.mp3)
+const externalFlipFiles = ['flip1.mp3','flip2.mp3','flip3.mp3','flip.mp3'];
+const externalSounds = [];
+externalFlipFiles.forEach(name => {
+    const a = new Audio(`assets/sounds/${name}`);
+    a.preload = 'auto';
+    a.volume = volume;
+    a.addEventListener('canplaythrough', () => {
+        externalSounds.push(a);
+    }, { once: true });
+    a.addEventListener('error', () => {
+        // ignore if not present
+    }, { once: true });
+});
+
 function playRandomFlip() {
-    // Randomly pick procedural or file-based
-    if (Math.random() < 0.6) {
-        playProceduralFlip();
-    } else if (flipSound) {
-        flipSound.currentTime = 0;
-        flipSound.volume = volume;
-        flipSound.play().catch(err => console.log('Audio play prevented', err));
+    // If we have external sounds loaded, prefer them sometimes
+    if (externalSounds.length > 0 && Math.random() < 0.7) {
+        const s = externalSounds[Math.floor(Math.random() * externalSounds.length)];
+        s.currentTime = 0;
+        s.volume = volume;
+        s.play().catch(err => console.log('External audio play prevented', err));
+        return;
     }
+
+    // Otherwise use procedural variants
+    const variant = Math.floor(Math.random() * 3);
+    playProceduralFlipVariant(variant);
 }
 
 // Play Sound button (for testing)
