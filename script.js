@@ -63,8 +63,12 @@ flipButton.addEventListener('click', function(e) {
         const result = Math.random() < 0.5 ? 'Heads' : 'Tails';
         resultDisplay.textContent = result;
 
-        // Update image (swap mid-flip)
-        coinImage.src = isPirateMode ? (result === 'Heads' ? pirateHeadsImg : pirateTailsImg) : (result === 'Heads' ? headsImg : tailsImg);
+        // Update image (swap mid-flip) and update accessible names
+        const newSrc = isPirateMode ? (result === 'Heads' ? pirateHeadsImg : pirateTailsImg) : (result === 'Heads' ? headsImg : tailsImg);
+        coinImage.src = newSrc;
+        coinImage.alt = `${result} side of the coin`;
+        const coinRegion = document.getElementById('coin');
+        if (coinRegion) coinRegion.setAttribute('aria-label', `Coin showing ${result}`);
 
         // Update stats
         totalFlips++;
@@ -85,8 +89,8 @@ flipButton.addEventListener('click', function(e) {
         animateNumber(document.getElementById('tails-count'), tailsCount);
         animateNumber(document.getElementById('streak'), currentStreak);
 
-        // Announce for screen readers
-        if (sr) sr.textContent = `Flip result: ${result}`;
+        // Announce for screen readers with more context
+        if (sr) sr.textContent = `Flip result: ${result}. Current streak: ${currentStreak}. Total flips: ${totalFlips}.`;
 
         // Spawn floating coin accent
         spawnFloatingCoin(result === 'Heads' ? 'assets/images/heads.png' : 'assets/images/tails.png');
@@ -383,15 +387,24 @@ function renderLeaderboard() {
     if (!container) return;
     const list = loadLeaderboard();
     container.innerHTML = '';
-    if (!list.length) { container.innerHTML = '<li class="muted">No scores yet</li>'; return; }
-    list.forEach(entry => {
+    if (!list.length) {
+        const empty = document.createElement('li');
+        empty.className = 'muted';
+        empty.setAttribute('role','listitem');
+        empty.textContent = 'No scores yet';
+        container.appendChild(empty);
+        return;
+    }
+    list.forEach((entry, idx) => {
         const li = document.createElement('li');
+        li.setAttribute('role','listitem');
+        li.setAttribute('aria-label', `${idx + 1}. ${entry.name}, ${entry.score} streak`);
         const name = document.createElement('span'); name.className = 'leaderboard-name'; name.textContent = entry.name;
         const score = document.createElement('span'); score.className = 'leaderboard-score'; score.textContent = entry.score;
         li.appendChild(name); li.appendChild(score);
         container.appendChild(li);
     });
-}
+} 
 
 function saveScoreToLeaderboard(name, score) {
     const list = loadLeaderboard();
@@ -399,6 +412,8 @@ function saveScoreToLeaderboard(name, score) {
     list.push(entry);
     list.sort((a,b) => b.score - a.score || new Date(a.date) - new Date(b.date));
     const top = list.slice(0,5);
+    // Announce the new high score to screen reader users
+    if (sr) sr.textContent = `New high score: ${entry.name}, ${entry.score} streak.`;
     saveLeaderboard(top);
     showToast('Score saved to leaderboard');
 }

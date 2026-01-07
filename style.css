@@ -56,6 +56,25 @@ body {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); border: 0;
 }
 
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; z-index: 1001;
+}
+.skip-link:focus,
+.skip-link:active {
+  left: 12px; top: 12px; width: auto; height: auto; padding: 8px 12px; background: var(--accent); color: #fff; border-radius: 6px; text-decoration: none; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+/* Improved focus-visible styles for keyboard users */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+button:focus-visible, input:focus-visible, select:focus-visible {
+  box-shadow: 0 0 0 4px rgba(124,58,237,0.12);
+  border-radius: 6px;
+}
+
 /* Theme overrides: Pirate and Minimal */
 .theme-pirate {
   --bg-1: #f5efe6;

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <div class="container">
         <header class="header">
             <div>
@@ -17,12 +18,12 @@
                 <p class="subtitle">A stylish coin toss — quick, fun, and a bit dramatic</p>
             </div>
             <div class="header-actions">
-                <button id="theme-button" class="ripple">Switch Mode</button>
-                <button id="shake-button" class="ripple" aria-pressed="false" title="Enable Shake to Flip">🤳 Shake</button>
+                <button id="theme-button" type="button" class="ripple" aria-label="Switch theme">Switch Mode</button>
+                <button id="shake-button" type="button" class="ripple" aria-pressed="false" aria-label="Toggle shake to flip" title="Enable Shake to Flip">🤳 Shake</button>
             </div>
         </header>
 
-        <main class="main-card">
+        <main class="main-card" id="main-content" role="main">
             <section class="left-panel">
                 <div class="coin" id="coin" role="region" aria-label="Coin">
                     <div class="coin-wrap" id="coin-wrap">
@@ -31,14 +32,14 @@
                     </div>
                 </div>
                 <div class="controls">
-                    <button id="flip-button" class="ripple">Flip Coin</button>
+                    <button id="flip-button" type="button" class="ripple" aria-label="Flip coin">Flip Coin</button>
                     <div class="sound-controls">
-                        <button id="mute-button" class="ripple" aria-pressed="false" title="Mute (M)">🔊</button>
+                        <button id="mute-button" type="button" class="ripple" aria-pressed="false" aria-label="Toggle mute" title="Mute (M)">🔊</button>
                         <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
                     </div>
-                    <button id="play-sound-button" class="ripple">Play Sound</button>
+                    <button id="play-sound-button" type="button" class="ripple" aria-label="Play flip sound">Play Sound</button>
                 </div>
-                <p id="result" class="result-text"></p>
+                <p id="result" class="result-text" role="status" aria-live="assertive"></p>
             </section>
 
             <aside class="right-panel">
@@ -63,7 +64,7 @@
 
                 <div class="leaderboard">
                     <h3>Leaderboard</h3>
-                    <ol id="leaderboard-list" class="leaderboard-list">
+                    <ol id="leaderboard-list" class="leaderboard-list" role="list" aria-live="polite" aria-label="Top scores">
                         <!-- top scores rendered here -->
                     </ol>
                 </div>
