@@ -1,4 +1,5 @@
 :root {
+  /* Default Neon Theme */
   --bg-1: #0f1724;
   --bg-2: #071228;
   --accent: #7C3AED;
@@ -7,11 +8,33 @@
   --muted: #9AA6B2;
 }
 
+/* Theme: Pirate */
+body.theme-pirate {
+  --bg-1: #2d1f0f;
+  --bg-2: #1a1208;
+  --accent: #c9a227;
+  --accent-2: #d4a574;
+  --text: #f5e6c8;
+  --muted: #a6906e;
+}
+
+/* Theme: Minimal */
+body.theme-minimal {
+  --bg-1: #f8f9fa;
+  --bg-2: #e9ecef;
+  --accent: #4a6fa5;
+  --accent-2: #6b8cba;
+  --text: #212529;
+  --muted: #6c757d;
+}
+
 /* Reset */
 * { box-sizing: border-box; margin:0; padding:0; }
 body {
   font-family: 'Poppins', sans-serif;
-  min-height: 100vh;
+  /* Use dynamic viewport height for better mobile support */
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
   margin:0;
   display:flex;
   justify-content:center;
@@ -19,6 +42,13 @@ body {
   background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
   color: var(--text);
   position: relative;
+  /* Smooth theme transitions */
+  transition: background 0.4s ease, color 0.4s ease;
+  /* Hardware acceleration for smoother rendering */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* Stars overlay */
